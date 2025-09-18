@@ -70,13 +70,68 @@
         #repos-window {
             top: 100px;
             left: 200px;
-            width: 400px;
+            width: 450px;
+            min-width: 400px;
         }
 
         .sunken-panel {
             height: 200px;
             width: 100%;
             overflow: auto;
+        }
+
+        /* Repository table responsiveness */
+        .repos-table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        #repos-table {
+            width: 100%;
+            min-width: 350px;
+            table-layout: auto;
+        }
+
+        #repos-table th,
+        #repos-table td {
+            padding: 4px 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #repos-table th:first-child,
+        #repos-table td:first-child {
+            max-width: 180px;
+            min-width: 120px;
+        }
+
+        #repos-table th:nth-child(2),
+        #repos-table td:nth-child(2) {
+            width: 60px;
+            text-align: center;
+        }
+
+        #repos-table th:nth-child(3),
+        #repos-table td:nth-child(3) {
+            width: 80px;
+        }
+
+        @media (max-width: 900px) {
+            #repos-window {
+                width: calc(100vw - 40px);
+                min-width: 300px;
+            }
+
+            #repos-table th:first-child,
+            #repos-table td:first-child {
+                max-width: 150px;
+                min-width: 100px;
+            }
+
+            .sunken-panel {
+                height: 180px;
+            }
         }
 
         /* Error dialog styles */
@@ -319,7 +374,10 @@
                 <div class="support-links">
                     <strong>💝 Support My Work:</strong><br>
                     <a href="https://store.kde.org/browse?cat=722&ord=latest" target="_blank">🛒 KDE Store - My Projects</a>
-                    <a href="https://github.com/bouteillerAlan" target="_blank">👨‍💻 GitHub Profile</a>
+                    <a href="https://github.com/bouteillerAlan" target="_blank">👨‍💻 GitHub Profile</a><br>
+                    <strong>🤝 Organization:</strong><br>
+                    <a href="https://github.com/results-may-vary-org" target="_blank">🏢 Results May Vary - GitHub</a>
+                    <a href="https://results-may-vary-org.github.io/rmv-frontpage/" target="_blank">🌐 RMV Website</a>
                 </div>
 
                 <hr>
@@ -403,34 +461,36 @@
             <div class="window-body">
                 <p>Your collection of digital ambitions and abandoned dreams</p>
                 <div class="sunken-panel">
-                    <table class="interactive" id="repos-table">
-                        <thead>
-                            <tr>
-                                <th>Repository</th>
-                                <th>Issues</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="repos-tbody">
-                            <tr>
-                                <td colspan="3" style="text-align: center;">
-                                    <div class="loading">
-                                        Cataloging repositories of regret
-                                        <div class="progress-indicator">
-                                            <div class="progress-segment"></div>
-                                            <div class="progress-segment"></div>
-                                            <div class="progress-segment"></div>
-                                            <div class="progress-segment"></div>
-                                            <div class="progress-segment"></div>
-                                            <div class="progress-segment"></div>
-                                            <div class="progress-segment"></div>
-                                            <div class="progress-segment"></div>
+                    <div class="repos-table-container">
+                        <table class="interactive" id="repos-table">
+                            <thead>
+                                <tr>
+                                    <th>Repository</th>
+                                    <th>Issues</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="repos-tbody">
+                                <tr>
+                                    <td colspan="3" style="text-align: center;">
+                                        <div class="loading">
+                                            Cataloging repositories of regret
+                                            <div class="progress-indicator">
+                                                <div class="progress-segment"></div>
+                                                <div class="progress-segment"></div>
+                                                <div class="progress-segment"></div>
+                                                <div class="progress-segment"></div>
+                                                <div class="progress-segment"></div>
+                                                <div class="progress-segment"></div>
+                                                <div class="progress-segment"></div>
+                                                <div class="progress-segment"></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
