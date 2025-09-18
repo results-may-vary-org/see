@@ -736,16 +736,6 @@
                 <div id="todo-list" class="todo-list">
                     <div class="loading">
                         Consulting the crystal ball of perpetual procrastination
-                        <div class="progress-indicator">
-                            <div class="progress-segment"></div>
-                            <div class="progress-segment"></div>
-                            <div class="progress-segment"></div>
-                            <div class="progress-segment"></div>
-                            <div class="progress-segment"></div>
-                            <div class="progress-segment"></div>
-                            <div class="progress-segment"></div>
-                            <div class="progress-segment"></div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -770,16 +760,6 @@
                 <div id="issue-list">
                     <div class="loading">
                         Fetching digital embarrassments from the cloud
-                        <div class="progress-indicator">
-                            <div class="progress-segment"></div>
-                            <div class="progress-segment"></div>
-                            <div class="progress-segment"></div>
-                            <div class="progress-segment"></div>
-                            <div class="progress-segment"></div>
-                            <div class="progress-segment"></div>
-                            <div class="progress-segment"></div>
-                            <div class="progress-segment"></div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -817,16 +797,6 @@
                                     <td colspan="5" style="text-align: center;">
                                         <div class="loading">
                                             Cataloging repositories of regret
-                                            <div class="progress-indicator">
-                                                <div class="progress-segment"></div>
-                                                <div class="progress-segment"></div>
-                                                <div class="progress-segment"></div>
-                                                <div class="progress-segment"></div>
-                                                <div class="progress-segment"></div>
-                                                <div class="progress-segment"></div>
-                                                <div class="progress-segment"></div>
-                                                <div class="progress-segment"></div>
-                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -1418,19 +1388,6 @@
                     }
                 }
 
-                // Add retry button if there were any errors
-                const errorRows = tbody.querySelectorAll('td:last-child');
-                const hasErrors = Array.from(errorRows).some(cell => cell.textContent === 'Error');
-                if (hasErrors) {
-                    const retryRow = document.createElement('tr');
-                    retryRow.innerHTML = `
-                        <td colspan="5" style="text-align: center; padding: 15px;">
-                            <button class="retry-button" onclick="loadRepositories()">🔄 Retry Loading Repositories</button>
-                        </td>
-                    `;
-                    tbody.appendChild(retryRow);
-                }
-
                 // Hide progress indicator when done
                 progressDiv.style.display = 'none';
             }, 1500);
@@ -1513,7 +1470,6 @@
                 } catch (error) {
                     issueList.innerHTML = `<div class="loading">
                         GitHub API is giving me the silent treatment (probably rate limited)
-                        <button class="retry-button" onclick="loadGitHubIssues()">🔄 Retry Loading Issues</button>
                     </div>`;
                 }
 
