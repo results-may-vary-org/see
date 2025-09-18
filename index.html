@@ -10,18 +10,161 @@
             font-family: "MS Sans Serif", sans-serif;
             background: #008080;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            font-size: 14px;
+            overflow: hidden;
         }
 
         .desktop {
             background: #008080;
-            min-height: 100vh;
+            height: 100vh;
+            width: 100vw;
             position: relative;
+            overflow: hidden;
         }
 
         .window {
-            margin: 20px auto;
-            max-width: 900px;
+            position: absolute;
+            height: auto;
+            min-height: 200px;
+            max-height: 60vh;
+            width: 350px;
+            min-width: 300px;
+            background: #c0c0c0;
+            border: 2px outset #c0c0c0;
+            user-select: none;
+        }
+
+        .window.dragging {
+            z-index: 1000;
+        }
+
+        .title-bar {
+            cursor: move;
+        }
+
+        .window-body {
+            height: auto;
+            min-height: calc(200px - 40px);
+            max-height: calc(60vh - 40px);
+            overflow-y: auto;
+            padding: 10px;
+            font-size: 13px;
+        }
+
+        #info-window {
+            top: 20px;
+            left: 20px;
+        }
+
+        #todo-window {
+            top: 20px;
+            left: 400px;
+        }
+
+        #issues-window {
+            top: 20px;
+            left: 780px;
+        }
+
+        #repos-window {
+            top: 100px;
+            left: 200px;
+            width: 400px;
+        }
+
+        .sunken-panel {
+            height: 200px;
+            width: 100%;
+            overflow: auto;
+        }
+
+        /* Error dialog styles */
+        .error-dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10000;
+            background: #c0c0c0;
+            border: 2px outset #c0c0c0;
+            width: 400px;
+            font-size: 12px;
+        }
+
+        .error-dialog .title-bar {
+            background: #000080;
+            color: white;
+            padding: 2px 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .error-dialog .dialog-body {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .error-icon {
+            width: 32px;
+            height: 32px;
+            background: red;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .retry-button {
+            margin: 10px auto;
+            display: block;
+            padding: 4px 12px;
+            font-size: 12px;
+        }
+
+        .support-links {
+            margin: 15px 0;
+            padding: 10px;
+            background: #f0f0f0;
+            border: 1px inset #c0c0c0;
+        }
+
+        .support-links a {
+            color: #0000ee;
+            text-decoration: underline;
+            margin: 0 5px;
+        }
+
+        .support-links a:visited {
+            color: #551a8b;
+        }
+
+        /* Responsive design for small screens */
+        @media (max-width: 900px) {
+            .window {
+                position: static;
+                width: calc(100vw - 40px);
+                max-width: none;
+                margin: 10px 20px;
+                height: 60vh;
+                max-height: 60vh;
+            }
+
+            .desktop {
+                overflow-y: auto;
+                padding: 10px 0;
+            }
+
+            #info-window, #todo-window, #issues-window {
+                position: static;
+                top: auto;
+                left: auto;
+            }
         }
 
         .title-bar-text {
@@ -60,19 +203,36 @@
         .loading {
             text-align: center;
             padding: 20px;
-            font-style: italic;
         }
 
-        .loading::after {
-            content: "";
-            animation: dots 2s infinite;
+        .progress-indicator {
+            display: flex;
+            gap: 2px;
+            justify-content: center;
+            margin: 10px 0;
         }
 
-        @keyframes dots {
-            0%, 20% { content: ""; }
-            40% { content: "."; }
-            60% { content: ".."; }
-            80%, 100% { content: "..."; }
+        .progress-segment {
+            width: 20px;
+            height: 20px;
+            background: #c0c0c0;
+            border: 1px inset #c0c0c0;
+            animation: segment-fill 2s infinite;
+        }
+
+        .progress-segment:nth-child(1) { animation-delay: 0s; }
+        .progress-segment:nth-child(2) { animation-delay: 0.2s; }
+        .progress-segment:nth-child(3) { animation-delay: 0.4s; }
+        .progress-segment:nth-child(4) { animation-delay: 0.6s; }
+        .progress-segment:nth-child(5) { animation-delay: 0.8s; }
+        .progress-segment:nth-child(6) { animation-delay: 1s; }
+        .progress-segment:nth-child(7) { animation-delay: 1.2s; }
+        .progress-segment:nth-child(8) { animation-delay: 1.4s; }
+
+        @keyframes segment-fill {
+            0%, 25% { background: #c0c0c0; border: 1px inset #c0c0c0; }
+            50%, 75% { background: #0000ff; border: 1px outset #0000ff; }
+            100% { background: #c0c0c0; border: 1px inset #c0c0c0; }
         }
 
         .status-bar {
@@ -124,9 +284,10 @@
 </head>
 <body>
     <div class="desktop">
-        <div class="window">
+        <!-- General Information Window -->
+        <div id="info-window" class="window">
             <div class="title-bar">
-                <div class="title-bar-text">SEE - My Open Source Procrastination Dashboard</div>
+                <div class="title-bar-text">📊 SEE - Dashboard Overview</div>
                 <div class="title-bar-controls">
                     <button aria-label="Minimize"></button>
                     <button aria-label="Maximize"></button>
@@ -134,57 +295,243 @@
                 </div>
             </div>
             <div class="window-body">
-                <h1>👀 SEE - Strategic Excellence Evaluation</h1>
+                <h2>👀 SEE - Systematically Evading Excellence</h2>
                 <p class="subtitle">
-                    A centralized dashboard for tracking open source project tasks and community contributions
+                    Where todos go to become "someday maybes" and issues accumulate like browser tabs
                 </p>
 
                 <div class="stats">
                     <div class="stat-item">
-                        <strong>Task Priority:</strong> <span id="procrastination">Loading...</span>
+                        <strong>Chaos Level:</strong> <span id="procrastination">Loading...</span>
                     </div>
                     <div class="stat-item">
-                        <strong>Development Mode:</strong> Active
+                        <strong>Coffee Dependency:</strong> Critical
                     </div>
                     <div class="stat-item">
                         <strong>Last Update:</strong> <span id="last-commit">Calculating...</span>
                     </div>
                 </div>
 
-                <fieldset>
-                    <legend>📝 Current Project Backlog</legend>
-                    <p>Feature requests, improvements, and technical debt items awaiting implementation</p>
-                    <div id="todo-list" class="todo-list">
-                        <div class="loading">Loading project tasks from database</div>
-                    </div>
-                </fieldset>
+                <hr>
+                <h3>📋 About This Dashboard</h3>
+                <p>This site serves as a centralized hub to display all todos and GitHub issues for my open source projects. It's a transparent way to track what I'm working on, what's broken, and what I'm strategically avoiding.</p>
 
-                <div class="todo-container">
-                    <fieldset class="issue-list">
-                        <legend>🐛 GitHub Issues: Community Feedback</legend>
-                        <p>Bug reports and feature requests from the open source community</p>
-                        <div id="issue-list">
-                            <div class="loading">Fetching latest issues from repositories</div>
-                        </div>
-                    </fieldset>
+                <div class="support-links">
+                    <strong>💝 Support My Work:</strong><br>
+                    <a href="https://store.kde.org/browse?cat=722&ord=latest" target="_blank">🛒 KDE Store - My Projects</a>
+                    <a href="https://github.com/bouteillerAlan" target="_blank">👨‍💻 GitHub Profile</a>
                 </div>
 
                 <hr>
                 <p style="font-size: 11px; color: #666; text-align: center;">
-                    Powered by collaborative open source development and continuous improvement<br>
-                    Built with 98.css for that nostalgic developer experience
+                    Powered by pure hubris and the naive belief that "this time will be different"<br>
+                    Built with 98.css because sometimes you need to embrace the aesthetic of your productivity level
                 </p>
+            </div>
+        </div>
+
+        <!-- Todo Window -->
+        <div id="todo-window" class="window">
+            <div class="title-bar">
+                <div class="title-bar-text">📝 The Eternal Todo Backlog</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body">
+                <p>Tasks that seemed like a good idea at 3 AM, professionally avoiding completion since <code>git init</code></p>
+                <div id="todo-list" class="todo-list">
+                    <div class="loading">
+                        Consulting the crystal ball of perpetual procrastination
+                        <div class="progress-indicator">
+                            <div class="progress-segment"></div>
+                            <div class="progress-segment"></div>
+                            <div class="progress-segment"></div>
+                            <div class="progress-segment"></div>
+                            <div class="progress-segment"></div>
+                            <div class="progress-segment"></div>
+                            <div class="progress-segment"></div>
+                            <div class="progress-segment"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Issues Window -->
+        <div id="issues-window" class="window">
+            <div class="title-bar">
+                <div class="title-bar-text">🐛 GitHub Issues: The Hall of Shame</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body">
+                <p>Community-sourced evidence of my inability to ship bug-free code</p>
+                <div id="issue-list">
+                    <div class="loading">
+                        Fetching digital embarrassments from the cloud
+                        <div class="progress-indicator">
+                            <div class="progress-segment"></div>
+                            <div class="progress-segment"></div>
+                            <div class="progress-segment"></div>
+                            <div class="progress-segment"></div>
+                            <div class="progress-segment"></div>
+                            <div class="progress-segment"></div>
+                            <div class="progress-segment"></div>
+                            <div class="progress-segment"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Repository List Window -->
+        <div id="repos-window" class="window">
+            <div class="title-bar">
+                <div class="title-bar-text">📁 Repository Overview</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body">
+                <p>Your collection of digital ambitions and abandoned dreams</p>
+                <div class="sunken-panel">
+                    <table class="interactive" id="repos-table">
+                        <thead>
+                            <tr>
+                                <th>Repository</th>
+                                <th>Issues</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="repos-tbody">
+                            <tr>
+                                <td colspan="3" style="text-align: center;">
+                                    <div class="loading">
+                                        Cataloging repositories of regret
+                                        <div class="progress-indicator">
+                                            <div class="progress-segment"></div>
+                                            <div class="progress-segment"></div>
+                                            <div class="progress-segment"></div>
+                                            <div class="progress-segment"></div>
+                                            <div class="progress-segment"></div>
+                                            <div class="progress-segment"></div>
+                                            <div class="progress-segment"></div>
+                                            <div class="progress-segment"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="status-bar">
-        <button class="start-button">Start</button>
-        <span style="margin-left: 10px;">Development Environment | Status: Online | Mode: Collaborative</span>
+        <button class="start-button" onclick="showErrorDialog()">Start</button>
+        <span style="margin-left: 10px;">Ready to disappoint | Bugs: ∞ | Caffeine: Dangerously Low</span>
         <span style="margin-left: auto;" id="clock"></span>
     </div>
 
     <script>
+        // Error dialog functionality
+        function showErrorDialog() {
+            const errorMessages = [
+                "This program has performed an illegal operation and will be shut down.\n\nIf the problem persists, contact your system administrator.",
+                "Cannot find 'motivation.exe'.\n\nPlease check if the file exists and try again.",
+                "Fatal Error: Coffee levels critically low.\n\nPlease refuel and restart the system.",
+                "404: Productivity not found.\n\nHave you tried turning it off and on again?",
+                "Access Denied: You do not have permission to be this productive.\n\nContact your procrastination administrator.",
+                "Runtime Error: Infinite loop detected in 'fix_bugs()' function.\n\nSuggestion: Add more coffee.",
+                "Memory leak detected: All available motivation has been consumed.\n\nConsider downloading more RAM... and coffee."
+            ];
+
+            const randomMessage = errorMessages[Math.floor(Math.random() * errorMessages.length)];
+
+            const dialog = document.createElement('div');
+            dialog.className = 'error-dialog';
+            dialog.innerHTML = `
+                <div class="title-bar">
+                    <div class="title-bar-text">System Error</div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: #c0c0c0; border: 1px outset #c0c0c0; width: 16px; height: 14px; font-size: 11px; line-height: 1;">×</button>
+                </div>
+                <div class="dialog-body">
+                    <div class="error-icon">!</div>
+                    <div>
+                        <div style="margin-bottom: 15px;">${randomMessage.replace(/\\n/g, '<br>')}</div>
+                        <button onclick="this.closest('.error-dialog').remove()" style="padding: 4px 16px; margin-left: auto; display: block;">OK</button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(dialog);
+
+            // Add sound effect if available (optional - browsers may not support it)
+            try {
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFApGn+DyvmgmBjiIzO/LeywELYPH8NuQQAoQYrPl6qZVFA==');
+                audio.play().catch(() => {}); // Ignore if audio fails
+            } catch (e) {}
+        }
+
+        // Window dragging functionality
+        let draggedWindow = null;
+        let dragOffset = { x: 0, y: 0 };
+
+        function initWindowDragging() {
+            const windows = document.querySelectorAll('.window');
+
+            windows.forEach(window => {
+                const titleBar = window.querySelector('.title-bar');
+
+                titleBar.addEventListener('mousedown', (e) => {
+                    if (window.style.position === 'static') return; // Skip dragging on mobile
+
+                    draggedWindow = window;
+                    window.classList.add('dragging');
+
+                    const rect = window.getBoundingClientRect();
+                    dragOffset.x = e.clientX - rect.left;
+                    dragOffset.y = e.clientY - rect.top;
+
+                    e.preventDefault();
+                });
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!draggedWindow) return;
+
+                const desktop = document.querySelector('.desktop');
+                const desktopRect = desktop.getBoundingClientRect();
+                const windowRect = draggedWindow.getBoundingClientRect();
+
+                let newX = e.clientX - desktopRect.left - dragOffset.x;
+                let newY = e.clientY - desktopRect.top - dragOffset.y;
+
+                // Keep window within desktop bounds
+                newX = Math.max(0, Math.min(newX, desktopRect.width - windowRect.width));
+                newY = Math.max(0, Math.min(newY, desktopRect.height - windowRect.height));
+
+                draggedWindow.style.left = newX + 'px';
+                draggedWindow.style.top = newY + 'px';
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (draggedWindow) {
+                    draggedWindow.classList.remove('dragging');
+                    draggedWindow = null;
+                }
+            });
+        }
+
         // Load todos from JSON file
         async function fetchTodos() {
             try {
@@ -211,16 +558,16 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Priority level calculator
-        function calculatePriority() {
-            const levels = ['High', 'Critical', 'Urgent', 'Standard', 'Scheduled'];
+        // Procrastination level calculator
+        function calculateProcrastination() {
+            const levels = ['Legendary', 'Mythical', 'Transcendent', 'PhD-level', 'Professional'];
             return levels[Math.floor(Math.random() * levels.length)];
         }
 
         // Load todos with realistic delay for dramatic effect
         async function loadTodos() {
             setTimeout(async () => {
-                document.getElementById('procrastination').textContent = calculatePriority();
+                document.getElementById('procrastination').textContent = calculateProcrastination();
                 document.getElementById('last-commit').textContent = 'Recently';
 
                 const todoList = document.getElementById('todo-list');
@@ -250,12 +597,93 @@
             }, 2000);
         }
 
+        // Repository data - update this with your actual repos
+        const repositoryList = [
+            'bouteillerAlan/earbud-companion',
+            'yourUsername/another-repo',
+            'yourUsername/third-repo'
+            // Add more repos here
+        ];
+
+        // Load repositories into the table
+        async function loadRepositories() {
+            setTimeout(async () => {
+                const tbody = document.getElementById('repos-tbody');
+                tbody.innerHTML = '';
+
+                for (const repo of repositoryList) {
+                    try {
+                        const response = await fetch(`https://api.github.com/repos/${repo}`);
+                        const repoData = await response.json();
+
+                        const issuesResponse = await fetch(`https://api.github.com/repos/${repo}/issues?state=open`);
+                        const issues = await issuesResponse.json();
+                        const issueCount = Array.isArray(issues) ? issues.length : 0;
+
+                        const status = repoData.archived ? 'Archived' :
+                                     repoData.private ? 'Private' : 'Public';
+
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${repo.split('/')[1]}</td>
+                            <td style="text-align: center;">${issueCount}</td>
+                            <td>${status}</td>
+                        `;
+
+                        row.addEventListener('click', () => {
+                            window.open(`https://github.com/${repo}`, '_blank');
+                        });
+
+                        tbody.appendChild(row);
+                    } catch (error) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${repo.split('/')[1]}</td>
+                            <td style="text-align: center;">?</td>
+                            <td>Error</td>
+                        `;
+                        tbody.appendChild(row);
+                    }
+                }
+
+                // Add retry button if there were any errors
+                const errorRows = tbody.querySelectorAll('td:last-child');
+                const hasErrors = Array.from(errorRows).some(cell => cell.textContent === 'Error');
+                if (hasErrors) {
+                    const retryRow = document.createElement('tr');
+                    retryRow.innerHTML = `
+                        <td colspan="3" style="text-align: center; padding: 15px;">
+                            <button class="retry-button" onclick="loadRepositories()">🔄 Retry Loading Repositories</button>
+                        </td>
+                    `;
+                    tbody.appendChild(retryRow);
+                }
+            }, 1500);
+        }
+
+        // Initialize table interactions
+        function initTableInteractions() {
+            document.querySelectorAll('table.interactive').forEach(element => {
+                element.addEventListener('click', (event) => {
+                    const highlightedClass = 'highlighted';
+                    const isRow = element => element.tagName === 'TR' && element.parentElement.tagName === 'TBODY';
+                    const newlySelectedRow = event.composedPath().find(isRow);
+                    const previouslySelectedRow = Array.from(newlySelectedRow.parentElement.children).filter(isRow).find(element => element.classList.contains(highlightedClass));
+
+                    if(previouslySelectedRow){
+                        previouslySelectedRow.classList.toggle(highlightedClass);
+                    }
+
+                    if (newlySelectedRow) {
+                        newlySelectedRow.classList.toggle(highlightedClass);
+                    }
+                });
+            });
+        }
+
         // Fetch GitHub issues (you'll need to replace with your actual repos)
         async function loadGitHubIssues() {
-            const repos = [
-                'bouteillerAlan/earbud-companion'
-                // Add more repos here
-            ];
+            const repos = repositoryList;
 
             setTimeout(async () => {
                 const issueList = document.getElementById('issue-list');
@@ -283,15 +711,21 @@
                         });
                     }
                 } catch (error) {
-                    issueList.innerHTML = '<div class="loading">Unable to fetch issues (API rate limit or network issue)</div>';
+                    issueList.innerHTML = `<div class="loading">
+                        GitHub API is giving me the silent treatment (probably rate limited)
+                        <button class="retry-button" onclick="loadGitHubIssues()">🔄 Retry Loading Issues</button>
+                    </div>`;
                 }
             }, 3000);
         }
 
         // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
+            initWindowDragging();
+            initTableInteractions();
             loadTodos();
             loadGitHubIssues();
+            loadRepositories();
         });
     </script>
 </body>
